@@ -166,6 +166,8 @@ next: [GitHub Sponsors](https://github.com/sponsors/mohammadi-hadi).
 
 ## Related projects
 
+- [arenakit](https://github.com/mohammadi-hadi/arenakit) — pairwise
+  leaderboards: which parts of a published rank order the votes support.
 - [rankkit](https://github.com/mohammadi-hadi/rankkit) — the same paired
   machinery applied to ranking metrics, plus position-bias correction for
   click logs; `rankkit eval --per-query` writes scores abeval can read.
