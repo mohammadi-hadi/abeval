@@ -166,6 +166,9 @@ next: [GitHub Sponsors](https://github.com/sponsors/mohammadi-hadi).
 
 ## Related projects
 
+- [rankkit](https://github.com/mohammadi-hadi/rankkit) — the same paired
+  machinery applied to ranking metrics, plus position-bias correction for
+  click logs; `rankkit eval --per-query` writes scores abeval can read.
 - [judgewatch](https://github.com/mohammadi-hadi/judgewatch) — monthly bias
   audits of LLM judges; abeval tells you whether this month's change is real.
 - [judgekit](https://github.com/mohammadi-hadi/judgekit) — audit your own
