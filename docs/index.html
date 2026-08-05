@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>abeval — eval sample-size calculator</title>
+<meta name="description" content="How many eval items do you need before a difference between two LLM runs is detectable? Paired-design sample-size calculator.">
+<meta property="og:title" content="abeval — eval sample-size calculator">
+<meta property="og:description" content="How many items does your eval need? Paired A/B statistics for LLM evals.">
+<style>
+:root {
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e;
+  --muted: #898781; --grid: #e1e0d9; --accent: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7;
+    --muted: #898781; --grid: #2c2c2a; --accent: #3987e5;
+  }
+}
+:root[data-theme="light"] {
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e;
+  --muted: #898781; --grid: #e1e0d9; --accent: #2a78d6;
+}
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7;
+  --muted: #898781; --grid: #2c2c2a; --accent: #3987e5;
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  background: var(--page); color: var(--ink);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 2.5rem 1rem 4rem;
+}
+main { max-width: 860px; margin: 0 auto; }
+h1 { font-size: 1.7rem; letter-spacing: -0.01em; }
+h1 a { color: inherit; text-decoration: none; }
+.sub { color: var(--ink-2); margin: 0.4rem 0 2rem; max-width: 620px; }
+.sub a { color: var(--accent); }
+.card {
+  background: var(--surface); border: 1px solid var(--grid);
+  border-radius: 10px; padding: 1.5rem; margin-bottom: 1.25rem;
+}
+.controls { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; }
+.field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 150px; flex: 1; }
+.field label { font-size: 0.82rem; color: var(--ink-2); }
+.field input[type="number"] {
+  font: inherit; color: var(--ink); background: var(--page);
+  border: 1px solid var(--grid); border-radius: 6px; padding: 0.45rem 0.6rem; width: 100%;
+}
+.field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.field .hint { font-size: 0.74rem; color: var(--muted); }
+.hero { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.hero .n {
+  font-size: 3rem; font-weight: 700; color: var(--accent);
+  font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+}
+.hero .what { color: var(--ink-2); max-width: 26rem; }
+.warn { color: var(--ink-2); font-size: 0.85rem; margin-top: 0.75rem; }
+figure { margin: 0; }
+figcaption { font-size: 0.85rem; color: var(--ink-2); margin-bottom: 0.75rem; }
+.chartwrap { overflow-x: auto; }
+svg text { fill: var(--ink-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+svg .axis { stroke: var(--grid); stroke-width: 1; }
+svg .curve { stroke: var(--accent); stroke-width: 2; fill: none; }
+svg .marker { fill: var(--accent); }
+svg .youline { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--grid); }
+th { color: var(--ink-2); font-weight: 600; font-size: 0.82rem; }
+th:first-child, td:first-child { text-align: left; }
+.foot { color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+.foot a { color: var(--accent); }
+code { background: var(--surface); border: 1px solid var(--grid); border-radius: 4px;
+  padding: 0.1rem 0.35rem; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<main>
+  <h1><a href="https://github.com/mohammadi-hadi/abeval">abeval</a> — sample-size calculator</h1>
+  <p class="sub">How many items does your eval need before the difference you
+  care about is distinguishable from noise? Paired design: both runs scored on
+  the same items. Same formulas as <a href="https://github.com/mohammadi-hadi/abeval"><code>abeval power</code></a>.</p>
+
+  <div class="card">
+    <div class="controls">
+      <div class="field">
+        <label for="baseline">Baseline accuracy (%)</label>
+        <input id="baseline" type="number" min="1" max="99" step="1" value="75">
+        <span class="hint">where run A sits today</span>
+      </div>
+      <div class="field">
+        <label for="delta">Difference to detect (points)</label>
+        <input id="delta" type="number" min="0.1" max="50" step="0.5" value="3">
+        <span class="hint">the improvement you'd act on</span>
+      </div>
+      <div class="field">
+        <label for="corr">Item correlation</label>
+        <input id="corr" type="number" min="0" max="0.95" step="0.05" value="0.5">
+        <span class="hint">0.5 typical for two variants of one system</span>
+      </div>
+      <div class="field">
+        <label for="power">Power (%)</label>
+        <input id="power" type="number" min="50" max="99" step="5" value="80">
+        <span class="hint">chance of detecting a real effect</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hero">
+      <span class="n" id="answer">–</span>
+      <span class="what" id="answer-what">paired items needed</span>
+    </div>
+    <p class="warn" id="warn"></p>
+  </div>
+
+  <div class="card">
+    <figure>
+      <figcaption id="curve-caption">Smallest detectable difference at each eval size (log-scaled items axis)</figcaption>
+      <div class="chartwrap"><svg id="curve" width="800" height="260" viewBox="0 0 800 260" role="img" aria-labelledby="curve-caption"></svg></div>
+    </figure>
+  </div>
+
+  <div class="card">
+    <table aria-label="Detectable difference at common eval sizes">
+      <thead><tr><th>Items in your eval</th><th>Smallest detectable difference</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <p class="foot">Two-sided test at 95% confidence on the mean of per-item
+  differences, normal approximation. Verify locally:
+  <code>pip install abeval</code> then <code>abeval power --baseline 0.75 --delta 0.03</code>.
+  MIT-licensed — <a href="https://github.com/mohammadi-hadi/abeval">github.com/mohammadi-hadi/abeval</a>.</p>
+</main>
+
+<script>
+"use strict";
+// Acklam's inverse normal CDF approximation (|error| < 1.15e-9),
+// matching statistics.NormalDist().inv_cdf closely enough for planning.
+function zQuantile(p) {
+  const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+             1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+  const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+             6.680131188771972e+01, -1.328068155288572e+01];
+  const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+  const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00,
+             3.754408661907416e+00];
+  const pl = 0.02425;
+  if (p < pl) {
+    const q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+           ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+  if (p <= 1 - pl) {
+    const q = p - 0.5, r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q /
+           (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  }
+  const q = Math.sqrt(-2 * Math.log(1 - p));
+  return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+          ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+}
+
+function sdDiff(pa, pb, corr) {
+  const va = pa * (1 - pa), vb = pb * (1 - pb);
+  return Math.sqrt(Math.max(1e-12, va + vb - 2 * corr * Math.sqrt(va * vb)));
+}
+function sampleSize(delta, sd, zA, zP) {
+  return Math.max(2, Math.ceil(Math.pow((zA + zP) * sd / Math.abs(delta), 2)));
+}
+function mde(n, sd, zA, zP) { return (zA + zP) * sd / Math.sqrt(n); }
+
+const $ = (id) => document.getElementById(id);
+const fmtInt = (n) => n.toLocaleString("en-US");
+
+function draw(sd, zA, zP, nNeeded) {
+  const svg = $("curve");
+  const W = 800, H = 260, L = 56, R = 20, T = 16, B = 36;
+  const nMin = 20, nMax = 20000;
+  const x = (n) => L + (Math.log10(n) - Math.log10(nMin)) / (Math.log10(nMax) - Math.log10(nMin)) * (W - L - R);
+  const dMax = mde(nMin, sd, zA, zP);
+  const y = (d) => T + (1 - d / dMax) * (H - T - B);
+  let parts = [];
+  // gridlines + x labels at decades
+  for (const n of [20, 100, 1000, 10000]) {
+    parts.push(`<line class="axis" x1="${x(n)}" y1="${T}" x2="${x(n)}" y2="${H-B}"/>`);
+    parts.push(`<text x="${x(n)}" y="${H-B+16}" text-anchor="middle">${fmtInt(n)}</text>`);
+  }
+  // y labels: 0 and 3 evenly spaced deltas
+  for (let i = 0; i <= 3; i++) {
+    const d = dMax * i / 3;
+    parts.push(`<line class="axis" x1="${L}" y1="${y(d)}" x2="${W-R}" y2="${y(d)}"/>`);
+    parts.push(`<text x="${L-8}" y="${y(d)+4}" text-anchor="end">${(100*d).toFixed(1)}pp</text>`);
+  }
+  // curve
+  const pts = [];
+  for (let i = 0; i <= 120; i++) {
+    const n = Math.pow(10, Math.log10(nMin) + (Math.log10(nMax) - Math.log10(nMin)) * i / 120);
+    pts.push(`${x(n).toFixed(1)},${y(mde(n, sd, zA, zP)).toFixed(1)}`);
+  }
+  parts.push(`<polyline class="curve" points="${pts.join(" ")}"/>`);
+  // marker at the answer
+  if (nNeeded >= nMin && nNeeded <= nMax) {
+    const d = mde(nNeeded, sd, zA, zP);
+    parts.push(`<line class="youline" x1="${x(nNeeded)}" y1="${y(d)}" x2="${x(nNeeded)}" y2="${H-B}"/>`);
+    parts.push(`<circle class="marker" cx="${x(nNeeded)}" cy="${y(d)}" r="4.5"/>`);
+    parts.push(`<text x="${x(nNeeded)}" y="${y(d)-10}" text-anchor="middle">${fmtInt(nNeeded)} items</text>`);
+  }
+  parts.push(`<text x="${(L+W-R)/2}" y="${H-4}" text-anchor="middle">items in the eval (log scale)</text>`);
+  svg.innerHTML = parts.join("");
+}
+
+function update() {
+  const baseline = Number($("baseline").value) / 100;
+  const deltaPts = Number($("delta").value) / 100;
+  const corr = Number($("corr").value);
+  const powerPct = Number($("power").value) / 100;
+  const warn = $("warn");
+  warn.textContent = "";
+  if (!(baseline > 0 && baseline < 1) || !(deltaPts > 0) || !(corr >= 0 && corr < 1) ||
+      !(powerPct > 0.5 && powerPct < 1) || baseline + deltaPts >= 1) {
+    $("answer").textContent = "–";
+    warn.textContent = "Inputs out of range (baseline + difference must stay under 100%).";
+    return;
+  }
+  const zA = zQuantile(0.975);
+  const zP = zQuantile(powerPct);
+  const sd = sdDiff(baseline, baseline + deltaPts, corr);
+  const n = sampleSize(deltaPts, sd, zA, zP);
+  $("answer").textContent = fmtInt(n);
+  $("answer-what").textContent = `paired items to detect ${(100*deltaPts).toFixed(1)}pp at ${Math.round(powerPct*100)}% power`;
+  if (n > 5000) {
+    warn.textContent = "That's a big eval. Consider whether a larger difference is the one worth acting on, or raise item correlation by pairing on identical items.";
+  }
+  const tbody = $("rows");
+  tbody.innerHTML = [100, 200, 500, 1000, 2000, 5000]
+    .map((k) => `<tr><td>${fmtInt(k)}</td><td>${(100 * mde(k, sd, zA, zP)).toFixed(1)} points</td></tr>`)
+    .join("");
+  draw(sd, zA, zP, n);
+}
+
+for (const id of ["baseline", "delta", "corr", "power"]) {
+  $(id).addEventListener("input", update);
+}
+update();
+</script>
+</body>
+</html>
