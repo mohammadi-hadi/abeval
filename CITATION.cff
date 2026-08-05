@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If abeval is useful in your work, please cite this repository."
+title: "abeval: A/B-test statistics for LLM evals"
+type: software
+authors:
+  - family-names: Mohammadi
+    given-names: Hadi
+version: 0.1.0
+date-released: 2026-08-05
+license: MIT
+repository-code: "https://github.com/mohammadi-hadi/abeval"
+url: "https://mohammadi.cv/abeval/"
+keywords:
+  - llm
+  - evaluation
+  - statistics
+  - ab-testing
+  - significance
