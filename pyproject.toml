@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "abeval"
+version = "0.1.0"
+description = "A/B-test statistics for LLM evals: error bars, paired comparisons, and sample-size planning"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Hadi Mohammadi" }]
+keywords = ["llm", "evaluation", "statistics", "ab-testing", "significance", "sample-size"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "build"]
+
+[project.urls]
+Homepage = "https://github.com/mohammadi-hadi/abeval"
+Calculator = "https://mohammadi.cv/abeval/"
+
+[project.scripts]
+abeval = "abeval.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["abeval"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# Malformed input data raises ValueError on purpose: the CLI catches it and
+# turns it into a friendly `error:` message with exit code 2.
+ignore = ["TRY004"]
