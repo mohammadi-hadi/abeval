@@ -15,8 +15,7 @@ HERE = Path(__file__).resolve().parent
 def write(name: str, records: list[dict]) -> None:
     path = HERE / name
     with open(path, "w", encoding="utf-8") as fh:
-        for rec in records:
-            fh.write(json.dumps(rec) + "\n")
+        fh.writelines(json.dumps(rec) + "\n" for rec in records)
     print(f"wrote {path.name} ({len(records)} records)")
 
 
