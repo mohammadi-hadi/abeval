@@ -170,6 +170,10 @@ next: [GitHub Sponsors](https://github.com/sponsors/mohammadi-hadi).
   audits of LLM judges; abeval tells you whether this month's change is real.
 - [judgekit](https://github.com/mohammadi-hadi/judgekit) — audit your own
   judge pipelines.
+- [calikit](https://github.com/mohammadi-hadi/calikit) — whether the
+  probabilities behind those scores are calibrated at all.
+- [judgepanel](https://github.com/mohammadi-hadi/judgepanel) — estimate judge
+  accuracy without gold labels.
 - [trajectory-judge](https://github.com/mohammadi-hadi/trajectory-judge) —
   evaluating agent trajectories with LLM judges.
 
