@@ -27,6 +27,7 @@ dev = ["pytest", "ruff", "build"]
 [project.urls]
 Homepage = "https://github.com/mohammadi-hadi/abeval"
 Calculator = "https://mohammadi.cv/abeval/"
+DOI = "https://doi.org/10.5281/zenodo.21807421"
 
 [project.scripts]
 abeval = "abeval.__main__:main"
