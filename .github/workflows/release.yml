@@ -39,3 +39,7 @@ jobs:
           name: release-dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # PyPI is immutable, so a re-run of a version that is
+          # already published carries no new information.
+          skip-existing: true
