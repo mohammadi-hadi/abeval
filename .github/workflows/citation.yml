@@ -1,0 +1,19 @@
+name: Citation
+
+on:
+  push:
+    paths: ["CITATION.cff"]
+  pull_request:
+    paths: ["CITATION.cff"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate CITATION.cff
+        run: pipx install cffconvert && cffconvert --validate
