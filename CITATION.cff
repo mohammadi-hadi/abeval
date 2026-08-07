@@ -5,6 +5,8 @@ type: software
 authors:
   - family-names: Mohammadi
     given-names: Hadi
+    orcid: "https://orcid.org/0000-0003-0860-9200"
+    affiliation: "Utrecht University"
 version: 0.1.0
 date-released: 2026-08-05
 doi: 10.5281/zenodo.21807421
