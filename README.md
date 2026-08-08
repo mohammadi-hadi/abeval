@@ -1,11 +1,16 @@
-# abeval
+<div align="center">
 
-A/B-test statistics for LLM evals.
+# abeval
 
 [![CI](https://github.com/mohammadi-hadi/abeval/actions/workflows/test.yml/badge.svg)](https://github.com/mohammadi-hadi/abeval/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/abeval)](https://pypi.org/project/abeval/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21807421.svg)](https://doi.org/10.5281/zenodo.21807421)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+*A/B-test statistics for LLM evals.*
+
+</div>
 
 Eval scores are sample estimates, but they're routinely reported as exact
 numbers: "our prompt scores 76.5%, the old one 63.5%, ship it." On 200 items
