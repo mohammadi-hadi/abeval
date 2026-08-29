@@ -76,7 +76,7 @@ to detect 3.0% difference from a 75.0% baseline (corr=0.5):
   with 1000 items you can detect >= 3.8%
 ```
 
-The lesson generalizes: a 200-item eval cannot see a 3-point improvement.
+The lesson generalizes: on 200 items, a true 3-point improvement gets caught less than one time in five.
 `--corr` is the item-level correlation between the two runs' outcomes (0.5 is
 a reasonable default for two variants of the same system; higher correlation
 means fewer items needed). There's an interactive version at
