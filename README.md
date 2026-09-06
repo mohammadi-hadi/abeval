@@ -174,23 +174,11 @@ next: [GitHub Sponsors](https://github.com/sponsors/mohammadi-hadi).
 - Variance-reduction guidance: how much power you buy by averaging k judge
   repeats, given your measured ICC.
 
-## Related projects
+## Part of evalstack
 
-- [arenakit](https://github.com/mohammadi-hadi/arenakit) — pairwise
-  leaderboards: which parts of a published rank order the votes support.
-- [rankkit](https://github.com/mohammadi-hadi/rankkit) — the same paired
-  machinery applied to ranking metrics, plus position-bias correction for
-  click logs; `rankkit eval --per-query` writes scores abeval can read.
-- [judgewatch](https://github.com/mohammadi-hadi/judgewatch) — monthly bias
-  audits of LLM judges; abeval tells you whether this month's change is real.
-- [judgekit](https://github.com/mohammadi-hadi/judgekit) — audit your own
-  judge pipelines.
-- [calikit](https://github.com/mohammadi-hadi/calikit) — whether the
-  probabilities behind those scores are calibrated at all.
-- [judgepanel](https://github.com/mohammadi-hadi/judgepanel) — estimate judge
-  accuracy without gold labels.
-- [trajectory-judge](https://github.com/mohammadi-hadi/trajectory-judge) —
-  evaluating agent trajectories with LLM judges.
+[evalstack](https://github.com/mohammadi-hadi/evalstack) is the map of these
+eleven evaluation tools: what each one measures, what it found on real data,
+and the two chains that run end to end.
 
 ## Citing
 
