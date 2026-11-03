@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "abeval"
-version = "0.1.0"
+version = "0.1.1"
 description = "A/B-test statistics for LLM evals: error bars, paired comparisons, and sample-size planning"
 readme = "README.md"
 requires-python = ">=3.10"

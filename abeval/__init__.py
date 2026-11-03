@@ -11,7 +11,7 @@ from .data import extract, pair, read_jsonl
 from .power import mde, power_simulated, sample_size, sd_diff_from_rates
 from .reliability import Reliability, judge_reliability
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "Comparison",
