@@ -6,7 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/abeval)](https://pypi.org/project/abeval/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21807421.svg)](https://doi.org/10.5281/zenodo.21807421)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/mohammadi-hadi/abeval/blob/main/LICENSE)
 
 *A/B-test statistics for LLM evals.*
 
@@ -185,8 +185,8 @@ and the two chains that run end to end.
 Releases are archived on Zenodo. Cite the concept DOI
 [10.5281/zenodo.21807421](https://doi.org/10.5281/zenodo.21807421), which
 always resolves to the latest version; structured metadata is in
-[CITATION.cff](CITATION.cff).
+[CITATION.cff](https://github.com/mohammadi-hadi/abeval/blob/main/CITATION.cff).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](https://github.com/mohammadi-hadi/abeval/blob/main/LICENSE).
